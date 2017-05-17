@@ -1,0 +1,19 @@
+{
+  "group": {
+    "name": "创建者"
+  },
+  "user": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "flag": [
+    { 
+      "id": "9001", 
+      "name": "权限管理" 
+    },
+    { 
+      "id": "9002", 
+      "name": "后台用户管理" 
+    }
+  ]
+}
