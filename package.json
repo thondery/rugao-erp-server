@@ -37,10 +37,22 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    "start": {
+      "command": "pm2 start ./index.js --name \"rugao-erp-server\" && pm2 save",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "remove": {
+      "command": "pm2 stop rugao-erp-server && pm2 delete rugao-erp-server"
     }
   },
   "scripts": {
     "init": "node ./init.js",
-    "dev": "better-npm-run dev"
+    "dev": "better-npm-run dev",
+    "start": "better-npm-run start",
+    "remove": "better-npm-run remove",
+    "restart": "npm run remove && npm run start"
   }
 }

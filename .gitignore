@@ -39,6 +39,7 @@ data/
 logger/
 public/
 src/config.production.js
+rugao-erp-server.conf
 
 
 # Typescript v1 declaration files
