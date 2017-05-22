@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import config from '../config'
 import * as flagProxy from './flag'
+import * as userProxy from './user'
 import { CODE, ErrorInfo, CustomError } from '../error'
 
 const dataDir = path.resolve(config.data, 'group.db')
@@ -15,6 +16,28 @@ export function getList () {
       resolve(list)
     } catch (error) {
       resolve([])
+    }
+  })
+}
+
+export function getListSync () {
+  return getList()
+    .then(async (ret) => {
+      for (let e of ret) {
+        let users = await userProxy.find({ group: e.gid })
+        e.counts = users.length
+      }
+      return ret
+    })
+}
+
+export function find (query = null) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const listData = await getList()
+      resolve(_.filter(listData, query))
+    } catch (error) {
+      reject(error)
     }
   })
 }
@@ -35,6 +58,17 @@ export function findOne (query, collection = null, field = 'group') {
       reject(error)
     }
   })
+}
+
+export const findOneSync = async (query) => {
+  
+    try {
+      const ret = await findOne(query)
+      return JSON.stringify(ret)
+    } catch (error) {
+      return error
+    }
+  
 }
 
 export function create (name, level, flag = []) {
@@ -96,6 +130,15 @@ export function remove (gids) {
       reject(error)
     }
   })
+}
+
+export function removeSync (gid) {
+  return userProxy.find({ group: gid })
+    .then( ret => {
+      const groups = _.map(ret, 'group')
+      return userProxy.remove(groups)
+    })
+    .then( ret => remove(gid))
 }
 
 export function clear () {

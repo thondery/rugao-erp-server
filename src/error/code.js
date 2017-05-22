@@ -27,3 +27,5 @@ export const ERROR_LOGINVALID_FAIL       = 1133
 
 export const ERROR_ACCESSTOKEN_NULL      = 1141
 export const ERROR_FINDUSER_NOEXIST      = 1142
+export const ERROR_ADMINGROUP_MARKUP     = 1143
+export const ERROR_ADMINUSER_MARKUP      = 1144

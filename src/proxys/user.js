@@ -21,6 +21,18 @@ export function getList () {
   })
 }
 
+export function getListSync () {
+  return getList()
+    .then(async (ret) => {
+      const _ret = []
+      for (let e of ret) {
+        let user = await groupProxy.findOne({ gid: e.group }, e)
+        _ret.push(user)
+      }
+      return _ret
+    })
+}
+
 export function findOne (query) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -32,7 +44,7 @@ export function findOne (query) {
   })
 }
 
-export function find (query) {
+export function find (query = null) {
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
@@ -95,13 +107,25 @@ export function remove (uids) {
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
-      _.remove(listData, o => uids.indexOf(o.uid) > -1)
+      uids && _.remove(listData, o => uids.indexOf(o.uid) > -1)
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })
       resolve(listData)
     } catch (error) {
       reject(error)
     }
   })
+}
+
+export function removeSync (uids) {
+  return remove(uids)
+    .then(async (ret) => {
+      const _ret = []
+      for (let e of ret) {
+        let user = await groupProxy.findOne({ gid: e.group }, e)
+        _ret.push(user)
+      }
+      return _ret
+    })
 }
 
 export function clear () {
