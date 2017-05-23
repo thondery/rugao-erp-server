@@ -3,11 +3,10 @@ import objectid from 'objectid'
 import path from 'path'
 import fs from 'fs-extra'
 import config from '../config'
-import * as flagProxy from './flag'
-import * as userProxy from './user'
+import * as partProxy from './part'
 import { CODE, ErrorInfo, CustomError } from '../error'
 
-const dataDir = path.resolve(config.data, 'group.db')
+const dataDir = path.resolve(config.data, 'species.db')
 
 export function getList () {
   return new Promise( (resolve, reject) => {
@@ -24,8 +23,8 @@ export function getListSync () {
   return getList()
     .then(async (ret) => {
       for (let e of ret) {
-        let users = await userProxy.find({ group: e.gid })
-        e.counts = users.length
+        let parts = await partProxy.find({ species: e.sid })
+        e.counts = parts.length
       }
       return ret
     })
@@ -42,7 +41,7 @@ export function find (query = null) {
   })
 }
 
-export function findOne (query, collection = null, field = 'group') {
+export function findOne (query, collection = null, field = 'species') {
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
@@ -60,19 +59,15 @@ export function findOne (query, collection = null, field = 'group') {
   })
 }
 
-export function create (name, level, flag = []) {
+export function create (name) {
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
-      const flags = await flagProxy.getList()
       const isTrue = _.find(listData, { name })
-      if (isTrue) throw ErrorInfo(CODE.ERROR_GROUPNAME_UNIQUE)
+      if (isTrue) throw ErrorInfo(CODE.ERROR_SPECIESNAME_UNIQUE)
       listData.push({
-        gid   : objectid(),
-        name  : name,
-        level : level,
-        flag  : level === 0 ? _.map(flags, 'id') : flag,
-        lock  : level === 0
+        sid   : objectid(),
+        name  : name
       })
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })
       resolve(_.find(listData, { name }))
@@ -82,52 +77,41 @@ export function create (name, level, flag = []) {
   })
 }
 
-export function update (gid, info) {
+export function update (sid, info) {
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
       if (info.name) {
         _.find(listData, o => {
-          const isTrue = o.gid !== gid && o.name === info.name
-          if (isTrue) throw ErrorInfo(CODE.ERROR_GROUPNAME_UNIQUE)
+          const isTrue = o.sid !== sid && o.name === info.name
+          if (isTrue) throw ErrorInfo(CODE.ERROR_SPECIESNAME_UNIQUE)
         })
       }
       for (let e of listData) {
-        if (e.gid === gid) {
+        if (e.sid === sid) {
           e.name = info.name || e.name
-          e.level = info.level || e.level
-          e.flag = info.flag || e.flag
         }
       }
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })
-      resolve(_.find(listData, { gid }))
+      resolve(_.find(listData, { sid }))
     } catch (error) {
       reject(error)
     }
   })
 }
 
-export function remove (gids) {
-  gids = _.isString(gids) && [gids]
+export function remove (sids) {
+  sids = _.isString(sids) && [sids]
   return new Promise(async (resolve, reject) => {
     try {
       const listData = await getList()
-      _.remove(listData, o => gids.indexOf(o.gid) > -1)
+      _.remove(listData, o => sids.indexOf(o.sid) > -1)
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })
       resolve(listData)
     } catch (error) {
       reject(error)
     }
   })
-}
-
-export function removeSync (gid) {
-  return userProxy.find({ group: gid })
-    .then( ret => {
-      const groups = _.map(ret, 'group')
-      return userProxy.remove(groups)
-    })
-    .then( ret => remove(gid))
 }
 
 export function clear () {

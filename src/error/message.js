@@ -29,3 +29,12 @@ export const ERROR_ACCESSTOKEN_NULL      = `尚未登录或登录已失效`
 export const ERROR_FINDUSER_NOEXIST      = `查询的用户不存在`
 export const ERROR_ADMINGROUP_MARKUP     = `缺少用户组标记`
 export const ERROR_ADMINUSER_MARKUP      = `缺少用户标记`
+
+export const ERROR_SPECIESNAME_REQUIRED  = `种类名称不能为空`
+export const ERROR_SPECIESNAME_UNIQUE    = `种类名称已存在`
+export const ERROR_SPECIESNAME_MARKUP    = `缺少种类标记`
+
+export const ERROR_PARTMODEL_REQUIRED    = `零件型号不能为空`
+export const ERROR_PARTMODEL_UNIQUE      = `零件型号已存在`
+export const ERROR_PARTNAME_REQUIRED     = `零件名称不能为空`
+export const ERROR_PARTMODEL_MARKUP      = `缺少零件标记`
