@@ -53,6 +53,7 @@ export function create (model, name, species) {
         _id       : objectid(),
         model     : model,
         name      : name,
+        counts    : 0,
         species   : species
       })
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })
@@ -77,6 +78,7 @@ export function update (_id, info) {
         if (e._id === _id) {
           e.model      = info.model || e.model
           e.name       = info.name || e.name
+          e.counts     = info.counts || e.counts
           e.species    = info.species || e.species
         }
       }
