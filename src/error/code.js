@@ -38,3 +38,8 @@ export const ERROR_PARTMODEL_REQUIRED    = 1211
 export const ERROR_PARTMODEL_UNIQUE      = 1212
 export const ERROR_PARTNAME_REQUIRED     = 1213
 export const ERROR_PARTMODEL_MARKUP      = 1214
+
+export const ERROR_PARTCOUNT_REQUIRED    = 1215
+export const ERROR_PARTCOUNT_FORMAT      = 1216
+
+export const ERROR_OUTCOUNT_OVERFLOW     = 1217

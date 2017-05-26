@@ -43,6 +43,24 @@ export function find (query = null) {
   })
 }
 
+export function findOne (query, collection = null, field = 'part') {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const listData = await getList()
+      const findData = _.find(listData, query)
+      if (collection) {
+        collection = {
+          ...collection,
+          [field]: findData
+        }
+      }
+      resolve(collection)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export function create (model, name, species) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -80,6 +98,28 @@ export function update (_id, info) {
           e.name       = info.name || e.name
           e.counts     = info.counts || e.counts
           e.species    = info.species || e.species
+        }
+      }
+      fs.writeJSONSync(dataDir, listData, { spaces: 2 })
+      resolve(_.find(listData, { _id }))
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export function updateByCount (_id, count) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const listData = await getList()
+      for (let e of listData) {
+        if (e._id === _id) {
+          if (e.counts + count >= 0) {
+            e.counts += count
+          }
+          else {
+            throw ErrorInfo(CODE.ERROR_OUTCOUNT_OVERFLOW)
+          }
         }
       }
       fs.writeJSONSync(dataDir, listData, { spaces: 2 })

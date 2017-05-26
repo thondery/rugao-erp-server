@@ -38,3 +38,8 @@ export const ERROR_PARTMODEL_REQUIRED    = `零件型号不能为空`
 export const ERROR_PARTMODEL_UNIQUE      = `零件型号已存在`
 export const ERROR_PARTNAME_REQUIRED     = `零件名称不能为空`
 export const ERROR_PARTMODEL_MARKUP      = `缺少零件标记`
+
+export const ERROR_PARTCOUNT_REQUIRED    = `缺少零件数量`
+export const ERROR_PARTCOUNT_FORMAT      = `零件数量不是个正确的数值`
+
+export const ERROR_OUTCOUNT_OVERFLOW     = `出库数量超出当前库存`

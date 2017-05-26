@@ -8,13 +8,15 @@ const {
   userPolice,
   groupPolice,
   speciesPolice,
-  partPolice
+  partPolice,
+  warehousePolice
 } = mounts(path.resolve(__dirname, '../polices/api_v1'), 'police')
 const { 
   userApi,
   groupApi,
   speciesApi,
-  partApi
+  partApi,
+  warehouseApi
 } = mounts(path.resolve(__dirname, '../api/v1'), 'api')
 
 router.post ( '/login',                          userPolice.login,         userApi.login              )
@@ -41,5 +43,8 @@ router.get  ( '/partlib/part',                   auth.accessToken,         partA
 router.post ( '/partlib/part/create',            auth.accessToken,         partPolice.create,        partApi.create          )
 router.post ( '/partlib/part/edit/:id',          auth.accessToken,         partPolice.edit,          partApi.edit            )
 router.post ( '/partlib/part/remove',            auth.accessToken,         partPolice.remove,        partApi.remove          )
+
+router.get  ( '/partlib/warehouse',              auth.accessToken,         warehouseApi.getList                              )
+router.post ( '/partlib/warehouse/create',       auth.accessToken,         warehousePolice.create,   warehouseApi.create     )
 
 export default router
